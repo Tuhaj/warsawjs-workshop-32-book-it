@@ -19,7 +19,6 @@ const SelectHotel = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      RatingChart.preload();
       setIsLoading(true);
       const result = await axios(ONLINE_URL);
       setIsLoading(false);
