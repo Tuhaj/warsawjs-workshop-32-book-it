@@ -14,7 +14,7 @@ const SelectHotel = props => {
   const [sortType, setSortType] = useState('price');
   const [isChartVisible, setChartVisible] = useState(false)
 
-
+const hotelsInFilter = countHotelsByBedType(hotels)
 const setFilter= (key, checked) => {
   setBedType({
     ...bedType,
@@ -44,7 +44,7 @@ const sortedHotels = applySort(filteredHotels, sortType)
       <Layout>
         <Layout.Sidebar>
           <ChartSwitcher isChartVisible={isChartVisible} switchChartVisible={setChartVisible} />
-          <Filters count={{}} onChange={setFilter}  />
+          <Filters count={hotelsInFilter} onChange={setFilter}  />
         </Layout.Sidebar>
         <Layout.Feed isLoading={isLoading}>
           {isChartVisible && (
@@ -79,9 +79,9 @@ function applyFilter(filters, data) {
 }
 function prepareChartData(hotels) {
   return hotels.map(h => ({
-    rating: h.rating.average,
-    price: h.price.amount,
-    reviews: h.rating.reviews,
+    rating: +h.rating.average,
+    price: +h.price.amount,
+    reviews: +h.rating.reviews,
     name: h.title,
   }));
 }
