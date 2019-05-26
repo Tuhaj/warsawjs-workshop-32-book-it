@@ -6,6 +6,8 @@ import Filters from './Filters';
 import SortBar from './SortBar';
 import HotelsList from './HotelsList';
 import ChartSwitcher from './ChartSwitcher';
+import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
+const RatingChart = React.lazy(() => import('./RatingChart'));
 
 import lazyWithPreload from '../../utils/lazyWithPreload';
 import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
