@@ -12,24 +12,28 @@ const SelectHotel = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [bedType, setBedType] = useState({})
   const [sortType, setSortType] = useState('price');
-const setFilter= (filterType, checked) => {
+  const [isChartVisible, setChartVisible] = useState(false)
+
+
+const setFilter= (key, checked) => {
   setBedType({
     ...bedType,
-    [filterType]: checked
+    [key]: checked
   });
 }
-const filteredHotels = applyFilter(bedType, hotels)
+
+const filteredHotels = applyFilter(bedType, hotels);
+
+const chartData = prepareChartData(filteredHotels)
+
 const sortedHotels = applySort(filteredHotels, sortType)
   useEffect(() => {
     setIsLoading(true);
     const fetchData = async () => {
       fetch(ONLINE_URL)
       .then(data => data.json()).then(data => {
-        setTimeout( () => {
-          console.log('loading')
           setData(data.list);
           setIsLoading(false);
-        }, 2000)
       });
     };
     fetchData();
@@ -39,11 +43,15 @@ const sortedHotels = applySort(filteredHotels, sortType)
       <SortBar sortField={sortType} setField={setSortType} />
       <Layout>
         <Layout.Sidebar>
-          <ChartSwitcher isChartVisible={false} switchChartVisible={noop} />
+          <ChartSwitcher isChartVisible={isChartVisible} switchChartVisible={setChartVisible} />
           <Filters count={{}} onChange={setFilter}  />
         </Layout.Sidebar>
         <Layout.Feed isLoading={isLoading}>
-          {isLoading && <RatingChart data={[]} />}
+          {isChartVisible && (
+            <React.Suspense fallback={<Loader active inline="centered" />}>
+              <RatingChart data={chartData} />
+            </React.Suspense>
+          )}
           {isLoading ? (
             <Loader active inline="centered" />
           ) : (
@@ -62,7 +70,6 @@ function countHotelsByBedType(data) {
   }, {});
 }
 function applyFilter(filters, data) {
-  console.log("filter");
   const isFilterSet = BEDS_TYPE.find(b => filters[b.value]);
   if (!isFilterSet) {
     return data;
