@@ -15,14 +15,19 @@ const SelectHotel = props => {
   const [isChartVisible, setChartVisible] = useState(false)
 
 const hotelsInFilter = countHotelsByBedType(hotels)
-const setFilter= (key, checked) => {
-  setBedType({
-    ...bedType,
-    [key]: checked
-  });
-}
+const setFilter = useCallback(
+    (key, value) =>
+      setBedType({
+        ...bedType,
+        [key]: value,
+      }),
+    [bedType]
+  );
 
-const filteredHotels = applyFilter(bedType, hotels);
+  const filteredHotels = useMemo(() => applyFilter(bedType, hotels), [
+    bedType,
+    hotels,
+  ]);
 
 const chartData = prepareChartData(filteredHotels)
 
