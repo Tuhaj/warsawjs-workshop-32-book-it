@@ -6,12 +6,10 @@ import Filters from './Filters';
 import SortBar from './SortBar';
 import HotelsList from './HotelsList';
 import ChartSwitcher from './ChartSwitcher';
-
-import lazyWithPreload from '../../utils/lazyWithPreload';
 import { ONLINE_URL, BEDS_TYPE } from '../../utils/const';
+import lazyWithPreload from '../../utils/lazyWithPreload';
 
-const RatingChart = lazyWithPreload(() => import('./RatingChart'));
-
+const RatingChart = React.lazy(() => import('./RatingChart'));
 const SelectHotel = props => {
   const [sortField, setField] = useState('price');
   const [bedsTypeFilter, setBedType] = useState({});
@@ -21,7 +19,6 @@ const SelectHotel = props => {
 
   useEffect(() => {
     const fetchData = async () => {
-      RatingChart.preload();
       setIsLoading(true);
       const result = await axios(ONLINE_URL);
       setIsLoading(false);
